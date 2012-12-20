@@ -295,7 +295,7 @@ class Flog < SexpProcessor
 
     ast = @parser.process ruby, file#, timeout
     
-    if !ast.present?
+    if ast
       mass[file] = ast.mass
       process ast
     end
