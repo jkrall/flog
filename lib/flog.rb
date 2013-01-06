@@ -304,7 +304,7 @@ class Flog < SexpProcessor
     end
   end
 
-  FLOG_IGNORE_METHOD_REGEX = /#[^\n]flog-ignore\s*\n(?:\s*#[^\n]*\n)?\s*def (?:self\.)?([^\s(]+)/m
+  FLOG_IGNORE_METHOD_REGEX = /#[^\n]flog-ignore[^\n]*\n(?:\s*#[^\n]*\n)?\s*def (?:self\.)?([^\s(]+)/m
 
   ##
   # Process the file data for "# flog-ignore" comments before any methods
