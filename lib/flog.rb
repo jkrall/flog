@@ -215,7 +215,9 @@ class Flog < SexpProcessor
   # Spankings!
 
   def add_to_score name, score = OTHER_SCORES[name]
-    @calls[signature][name] += score * @multiplier
+    unless @ignored_methods.include?(signature.split('::').last)
+      @calls[signature][name] += score * @multiplier
+    end
   end
 
   ##
@@ -263,6 +265,7 @@ class Flog < SexpProcessor
   # don't have to.
 
   def flog_ruby ruby, file="-", timeout = 10
+    @ignored_methods = flog_ignored_methods(ruby)
     flog_ruby! ruby, file, timeout
   rescue Timeout::Error
     warn "TIMEOUT parsing #{file}. Skipping."
@@ -299,6 +302,14 @@ class Flog < SexpProcessor
       mass[file] = ast.mass
       process ast
     end
+  end
+
+  FLOG_IGNORE_METHOD_REGEX = /#[^\n]flog-ignore\s*\n(?:\s*#[^\n]*\n)?\s*def (?:self\.)?([^\s(]+)/m
+
+  ##
+  # Process the file data for "# flog-ignore" comments before any methods
+  def flog_ignored_methods ruby
+    ruby.match(FLOG_IGNORE_METHOD_REGEX).to_a.tap {|matches| matches.shift }
   end
 
   ##
