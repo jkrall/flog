@@ -215,7 +215,7 @@ class Flog < SexpProcessor
   # Spankings!
 
   def add_to_score name, score = OTHER_SCORES[name]
-    unless @ignored_methods.include?(signature.split('::').last)
+    unless @ignored_methods.include?(signature.split(/::|#/).last)
       @calls[signature][name] += score * @multiplier
     end
   end
